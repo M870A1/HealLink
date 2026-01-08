@@ -1,4 +1,4 @@
-package org.zerock.obj2026.dto;
+package org.zerock.obj2026.healthinfo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
