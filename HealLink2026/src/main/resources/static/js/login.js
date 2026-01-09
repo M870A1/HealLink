@@ -21,3 +21,16 @@ window.openKakaoLogin = function() {
         }
     }, 500);
 };
+
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) {
+        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+
+        if (username) username.value = '';
+        if (password) password.value = '';
+    }
+});
