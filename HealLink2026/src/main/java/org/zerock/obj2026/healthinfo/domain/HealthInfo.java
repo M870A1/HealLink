@@ -48,4 +48,12 @@ public class HealthInfo {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    // 수정용
+    public void update(String title, String content, HealthInfoCategory category, HealthInfoSourceType sourceType) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.sourceType = sourceType;
+    }
 }
