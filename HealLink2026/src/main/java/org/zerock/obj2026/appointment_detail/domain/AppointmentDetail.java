@@ -11,7 +11,7 @@ import org.zerock.obj2026.department.domain.Department;
 import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-@ToString(exclude = {"appointment", "department"})
+@ToString(exclude = {"modal.css", "department"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

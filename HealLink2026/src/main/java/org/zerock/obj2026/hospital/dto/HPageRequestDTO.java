@@ -25,7 +25,7 @@ public class HPageRequestDTO {
 
     //Pageable 생성 메서드
     public Pageable getPageable() {
-        return PageRequest.of(page-1, size, Sort.by("id").descending());
+        return PageRequest.of(page-1, size, Sort.by("hpid").descending());
     }
     public String[] splitTypes(){
         if( types == null || types.length()==0){

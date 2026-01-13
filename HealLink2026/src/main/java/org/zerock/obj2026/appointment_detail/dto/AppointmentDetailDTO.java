@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class AppointmentDetailDTO {
-    private Long appointmentId; //  AppointmentDTO's appointmentId
-    private Long departmentId; //  DepartmentDTO's departmentId
+    private Long appointmentId; //  AppointmentDTO에서 appointmentId를 참조
+    private Long departmentId; //  DepartmentDTO에서 departmentId를 참조
     private String symptom;
     private String note;
     private LocalDateTime createdAt;

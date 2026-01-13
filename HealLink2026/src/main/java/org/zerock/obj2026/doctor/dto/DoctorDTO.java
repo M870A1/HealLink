@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class DoctorDTO {
-    private Long doctorId; // References UserDTO's userId
-    private Long hospitalId; // References HospitalDTO's hospitalId
+    private Long doctorId; // UserDTO에서  userId를 참조
+    private Long hospitalId; // HospitalDTO에서 hospitalId를 참조
     private String licenseNumber;
     private Integer careerYears;
     private String introduction;

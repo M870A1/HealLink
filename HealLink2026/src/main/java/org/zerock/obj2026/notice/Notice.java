@@ -1,4 +1,4 @@
-package org.zerock.obj2026.domain;
+package org.zerock.obj2026.notice;
 
 import jakarta.persistence.*;
 import lombok.*;

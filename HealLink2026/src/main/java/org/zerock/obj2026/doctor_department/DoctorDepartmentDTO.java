@@ -1,4 +1,4 @@
-package org.zerock.obj2026.doctor_deparment;
+package org.zerock.obj2026.doctor_department;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

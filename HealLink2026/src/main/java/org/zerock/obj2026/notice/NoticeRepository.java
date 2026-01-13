@@ -1,7 +1,6 @@
-package org.zerock.obj2026.repository;
+package org.zerock.obj2026.notice;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.zerock.obj2026.domain.Notice;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 }

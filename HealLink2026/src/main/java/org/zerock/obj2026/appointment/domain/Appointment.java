@@ -6,7 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.zerock.obj2026.doctor_schedule.domain.DoctorSchedule;
-import org.zerock.obj2026.domain.AppointmentStatus;
 import org.zerock.obj2026.patient.domain.Patient;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "appointment")
+@Table(name = "modal.css")
 public class Appointment {
 
     @Id

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;       // For birth_date
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class PatientDTO {
     private Long patientId; // References UserDTO's userId
     private String phone;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String gender;
     private String address;
     private String bloodType;

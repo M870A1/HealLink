@@ -3,7 +3,7 @@ package org.zerock.obj2026.member.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.zerock.obj2026.dto.UserRole;
+import org.zerock.obj2026.member.domain.UserRole;
 
 import java.time.LocalDateTime;
 

@@ -7,12 +7,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.zerock.obj2026.doctor.domain.Doctor;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @Getter
+@Setter
 @ToString(exclude = "doctor")
 @Builder
 @NoArgsConstructor
@@ -33,13 +34,13 @@ public class DoctorSchedule {
     private Doctor doctor;
 
     @Column(nullable = false)
-    private Date workDate;
+    private LocalDate workDate;
 
     @Column(nullable = false)
-    private Time startTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private Time endTime;
+    private LocalTime endTime;
 
     @Column(nullable = false)
     @Builder.Default

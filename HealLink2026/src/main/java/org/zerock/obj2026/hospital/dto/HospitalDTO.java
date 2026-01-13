@@ -12,13 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class HospitalDTO {
-    private Long hospitalId;
-    private String name;
-    private String address;
-    private String phone;
-    private BigDecimal latitude; // Using BigDecimal for precision
-    private BigDecimal longitude; // Using BigDecimal for precision
+    private String hpid;
+    private String dutyName;
+    private String dutyAddr;
+    private String dutyTel1;
+    private BigDecimal wgs84Lat;
+    private BigDecimal wgs84Lon;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

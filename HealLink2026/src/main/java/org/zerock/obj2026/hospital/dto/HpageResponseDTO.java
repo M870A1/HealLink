@@ -10,12 +10,12 @@ import java.util.List;
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-
-    public class HpageResponseDTO {
+                                // 제네릭 E타입 부여
+    public class HpageResponseDTO<E> {
         private HPageRequestDTO pageRequestDTO;
         private int totalPages;
         private long totalElements;
-        private List dtoList;
+        private List<E> dtoList;
 
         private int page; // 현제 페이지
         private int size; // 출력 개수
@@ -24,13 +24,13 @@ import java.util.List;
         private boolean prev; // 이전버튼 여부
         private boolean next; // 다음버튼 여부
 
-        public HpageResponseDTO(HPageRequestDTO hPageRequestDTO, Page page){
-            this.pageRequestDTO = pageRequestDTO;
+        public HpageResponseDTO(HPageRequestDTO hPageRequestDTO, Page<E> page){
+            this.pageRequestDTO = hPageRequestDTO;
             this.totalPages = page.getTotalPages();
             this.totalElements = page.getTotalElements();
             this.dtoList = page.getContent();
-            this.page = pageRequestDTO.getPage();
-            this.size = pageRequestDTO.getSize();
+            this.page = hPageRequestDTO.getPage(); // 수정
+            this.size = hPageRequestDTO.getSize(); // 수정
 
             this.end = (int)(Math.ceil( this.page /10.0)*10);
             this.start = this.end - 9;

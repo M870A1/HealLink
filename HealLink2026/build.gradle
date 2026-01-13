@@ -52,6 +52,8 @@ dependencies {
     annotationProcessor'jakarta.annotation:jakarta.annotation-api'
     annotationProcessor'jakarta.persistence:jakarta.persistence-api'
 
+    implementation 'org.modelmapper:modelmapper:3.2.0'
+
 //    Thymeleaf 레이아웃 라이브러리
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }

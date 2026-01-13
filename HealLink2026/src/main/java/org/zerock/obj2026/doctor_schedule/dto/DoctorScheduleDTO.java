@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;       // For work_date
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,11 +14,11 @@ import java.time.LocalDateTime;
 
 public class DoctorScheduleDTO {
     private Long scheduleId;
-    private Long doctorId; // References DoctorDTO's doctorId
-    private Date workDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Boolean isAvailable; // TINYINT(1) can map to Boolean
+    private Long doctorId; // doctor DTO의 doctorId 참조
+    private LocalDate workDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private Boolean isAvailable;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

@@ -1,7 +1,6 @@
-package org.zerock.obj2026.repository;
+package org.zerock.obj2026.healthinfo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.zerock.obj2026.domain.HealthInfo;
 
 public interface HealthInfoRepository extends JpaRepository<HealthInfo, Long> {
 }

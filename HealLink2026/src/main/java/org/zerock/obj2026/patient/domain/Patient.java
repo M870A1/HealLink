@@ -7,7 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.zerock.obj2026.member.domain.User;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
@@ -32,7 +32,7 @@ public class Patient {
     private String phone;
 
     @Column(nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false, length = 10)
     private String gender;
@@ -46,10 +46,10 @@ public class Patient {
     @Column(nullable = false)
     private Boolean hasAllergies = false;
 
-    @Lob // For TEXT type
+    @Lob
     private String allergies;
 
-    @Lob // For TEXT type
+    @Lob
     private String medicalHistory;
 
     @CreatedDate
