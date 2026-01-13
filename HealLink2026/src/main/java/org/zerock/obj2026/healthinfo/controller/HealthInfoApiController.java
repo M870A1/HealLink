@@ -11,10 +11,10 @@ import org.zerock.obj2026.healthinfo.service.HealthInfoService;
 
 import java.util.List;
 
-// body(healthinfos) -> json,  body(savedId + "번 등록 성공") -> 문자열,
 @RestController
 @RequiredArgsConstructor
 
+// Axios
 public class HealthInfoApiController
 {
     private final HealthInfoService healthInfoService;
@@ -22,13 +22,11 @@ public class HealthInfoApiController
     // 목록
     @GetMapping("/api/healthinfo")
     public ResponseEntity<List<HealthInfoResponse>> findAllHealthInfo() {
-        // 헬스인포리스폰스, 헬스인포서비스.파인드올
         List<HealthInfoResponse> healthinfos = healthInfoService.findAll();
-        // 리스폰스엔티티 : 정해진 이름
         return ResponseEntity.ok().body(healthinfos);
     }
 
-    // 쓰기 axios
+    // 쓰기
     @PostMapping("/api/healthinfo")
     public ResponseEntity<?> create(@Valid @RequestBody HealthInfoAddRequest dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -38,19 +36,18 @@ public class HealthInfoApiController
         return ResponseEntity.ok().body(savedId + "번 등록 성공");
     }
 
-    // 삭제 axios
+    // 삭제
     @DeleteMapping("/api/healthinfo/{id}")
     public ResponseEntity<Void> deleteHealthInfo(@PathVariable Long id) {
         healthInfoService.delete(id); // 서비스에서 deleteById 실행
         return ResponseEntity.ok().build();
     }
-    // 수정 axios
+    // 수정
     @PutMapping("/api/healthinfo/{id}")
     public ResponseEntity<Long> update(@PathVariable Long id, @RequestBody HealthInfoAddRequest dto) {
         Long updatedId = healthInfoService.update(id, dto);
         return ResponseEntity.ok().body(updatedId);
     }
-
 
 
 }

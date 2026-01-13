@@ -17,12 +17,12 @@ import java.util.List;
 public class HealthInfoService {
     private final HealthInfoRepository healthInfoRepository;
 
-    // 1. 목록 (Entity -> Response DTO 변환)
+    // 1. 목록 .findAll...
     public List<HealthInfoResponse> findAll(){
         return healthInfoRepository.findAllByOrderByHealthInfoIdDesc().stream().map(HealthInfoResponse::new).toList();
     }
 
-    // 2. 상세 조회 (Entity -> Response DTO 변환)
+    // 2. 상세 조회  .findById
     public HealthInfoResponse findById(long id){
         HealthInfo healthInfo =  healthInfoRepository.findById(id)
                         // 예외처리
