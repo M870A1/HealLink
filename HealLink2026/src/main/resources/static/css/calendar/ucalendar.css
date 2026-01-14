@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.reservation-wrap {
+    display: flex;
+    gap: 30px;
+    padding: 50px;
+}
+
+.calendar-area {
+    width: 320px;
+}
+
+.time-area {
+    width: 240px;
+}
+
+#timeSlots button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+}
+
+#timeSlots button:hover:not(:disabled) {
+    background: #e3f2fd;
+}
+
+#timeSlots button:disabled {
+    background: #ddd;
+    color: #888;
+    cursor: not-allowed;
+}
+
+#timeSlots p {
+    color: #666;
+}
