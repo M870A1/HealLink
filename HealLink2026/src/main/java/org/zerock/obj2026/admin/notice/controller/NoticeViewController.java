@@ -2,12 +2,16 @@ package org.zerock.obj2026.admin.notice.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.obj2026.admin.notice.dto.NoticeResponse;
 import org.zerock.obj2026.admin.notice.service.NoticeService;
+import org.zerock.obj2026.member.dto.UserSecurityDTO;
 
 import java.util.List;
 
@@ -35,18 +39,25 @@ public class NoticeViewController {
     // 쓰기
     @GetMapping("/admin/notice/create")
     public String createNoticePage() {
-        // 리턴하는 문자열은 html 파일의 이름입니다 (notice_create.html)
-        // 만약 폴더 안에 있다면 "admin/notice_create" 식으로 경로를 적어주세요.
         return "admin/notice_create";
     }
 
     // 수정
     @GetMapping("/admin/notice/modify/{id}")
-    public String editNoticePage(@PathVariable Long id, Model model) {
-        // 기존 상세조회 로직을 재활용해서 데이터를 가져옵니다.
+    public String editNoticePage(@PathVariable Long id, Model model,
+                                 @AuthenticationPrincipal UserSecurityDTO userDetails,
+                                 RedirectAttributes redirectAttributes
+                                 ) {
+
         NoticeResponse notice = noticeService.findById(id);
+
+        if (!notice.getWriterId().equals(userDetails.getUser().getUserId())) {
+            redirectAttributes.addFlashAttribute("error", "본인의 글만 수정할 수 있습니다.");
+            return "redirect:/admin/notice";
+        }
+
         model.addAttribute("notice", notice);
-        return "admin/notice_edit"; // notice_edit.html 파일 필요
+        return "admin/notice_edit";
     }
 
 }

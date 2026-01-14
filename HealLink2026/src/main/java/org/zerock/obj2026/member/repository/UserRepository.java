@@ -10,6 +10,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     // SpringSecurity가 비밀번호 확인을 대신함
     Optional<User> findByEmail(String email);
 
+    Long email(String email);
 }
 
 

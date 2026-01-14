@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.zerock.obj2026.admin.notice.dto.NoticeAddRequest;
 import org.zerock.obj2026.member.domain.User;
 
 import java.time.LocalDateTime;
@@ -63,13 +64,13 @@ public class Notice {
     }
 
     // 수정용 .update
-    public void update(String title, String content, boolean isPinned) {
-        this.title = title;
-        this.content = content;
-        this.isPinned = isPinned;
+    public void update(NoticeAddRequest dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.isPinned = dto.getIsPinned();
     }
 
-    // 삭제용(소프트 삭제) .delete
+    // 삭제용(소프트 딜리트) .delete
     public void delete() {
         this.isDeleted = true;
     }

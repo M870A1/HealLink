@@ -1,15 +1,39 @@
+HTML
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <head>
     <meta charset="UTF-8">
     <title>관리자 - 공지사항 목록</title>
     <style>
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         th { background-color: #f4f4f4; }
+        .user-info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
+        .pinned-row { background-color: #fff9db; }
     </style>
 </head>
 <body>
+
+<div class="user-info">
+    <div sec:authorize="isAuthenticated()">
+        <strong>현재 접속자:</strong>
+        ID: <span th:text="${#authentication.principal.username}">email@test.com</span>
+        (이메일 동일)
+
+        <p>내 권한: <span th:text="${#authentication.authorities}">ROLE_USER</span></p>
+        <button type="button" onclick="location.href='/logout'">로그아웃</button>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">임시 로그아웃</button>
+        </form>
+    </div>
+    <div sec:authorize="isAnonymous()">
+        <strong>현재 상태:</strong> 비로그인 상태 (글쓰기가 제한됩니다.)
+        <button type="button" onclick="location.href='/login'">로그인하러 가기</button>
+    </div>
+</div>
+
 <h2>공지사항 목록</h2>
 
 <table>
@@ -27,7 +51,6 @@
         <td th:text="${notice.noticeId}">1</td>
         <td>
             <span th:if="${notice.isPinned}" style="color: red; font-weight: bold;">[필독]</span>
-
             <a th:href="@{/admin/notice/{id}(id=${notice.noticeId})}" th:text="${notice.title}">제목</a>
         </td>
         <td th:text="${notice.writerName}">작성자</td>
@@ -41,6 +64,32 @@
 </table>
 
 <br>
-<button type="button" onclick="location.href='/admin/notice/create'">공지사항 등록</button>
+
+<div sec:authorize="hasRole('ADMIN')">
+    <button type="button" th:onclick="checkLoginAndRedirect()">공지사항 등록</button>
+</div>
+
+<div sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
+    <p>※ 공지사항 작성 권한이 없습니다.</p>
+</div>
+
+<script th:inline="javascript">
+    function checkLoginAndRedirect() {
+        /* Spring Security의 인증 여부를 자바스크립트 변수로 가져옴 */
+        const isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+
+        if (!isAuthenticated) {
+            alert("로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.");
+            location.href = '/login'; // 프로젝트의 로그인 경로에 맞게 수정하세요
+        } else {
+            location.href = '/admin/notice/create';
+        }
+    }
+</script>
+
+<script th:if="${error}">
+    alert([[${error}]]);
+</script>
+
 </body>
 </html>

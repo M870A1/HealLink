@@ -60,6 +60,10 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/new-article").hasRole("ADMIN")
 //                         위의 url이외에 모든 url은 로그인이 필요하도록 설정
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+
+                        // 관리자만 쓰기 수정 삭제 가능 2026-01-14
+                        .requestMatchers("/admin/notice/create/**", "/admin/notice/modify/**", "/admin/notice/delete/**").hasRole("ADMIN")
+
                         .anyRequest().permitAll())
 //                 form태그를 사용한 로그인 관련 설정
                 .formLogin(formLogin -> formLogin

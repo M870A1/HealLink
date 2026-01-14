@@ -29,7 +29,7 @@ public class NoticeService {
                 .toList(); // 3. 리스트로 반환
     }
 
-    // 2. 상세 조회 .findById
+    // 2. 상세 조회 .findById->
     @Transactional
     public NoticeResponse findById(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
@@ -39,11 +39,11 @@ public class NoticeService {
         return NoticeResponse.fromEntity(notice); // fromEntity 사용
     }
 
-    // 3. 쓰기 .save
+    // 3. 쓰기 .save( <- .findByEmail )
     @Transactional
-    public Long createNotice(NoticeAddRequest dto) {
+    public Long createNotice(NoticeAddRequest dto, String email) {
         // 로그인 구현 아직이라서 DB에 저장된 유저 한 명을 가져옵니다 (ID 1번 유저)
-        User writer = userRepository.findById(1L)
+        User writer = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없어요."));
 
         Notice notice = dto.toEntity(writer); // 괄호 안에 writer
@@ -53,23 +53,35 @@ public class NoticeService {
 
     // 4. 수정 .update(도메인)
     @Transactional
-    public void updateNotice(Long noticeId, NoticeAddRequest dto) {
-
+    public void updateNotice(Long noticeId, NoticeAddRequest dto, Long userId) {
+        // 1. 대상 찾기
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("글 id를 사용"));
 
-        // 2. 엔티티의 내용을 수정합니다. (엔티티에 update 메서드를 미리 만들어두면 편합니다)
-        notice.update(dto.getTitle(), dto.getContent(), dto.getIsPinned());
+        // 2. 권한 체크
+        if (!notice.getWriter().getUserId().equals(userId)) {
+            throw new RuntimeException("수정 권한이 없습니다. 본인만 수정 가능합니다.");
+        }
+
+        // 3. 수정 (엔티티의 update 메서드)
+        notice.update(dto);
 
     }
 
     // 5. 삭제 .delete(도메인)
     @Transactional
-    public void deleteNotice(Long id) {
-        Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+    public void deleteNotice(Long noticeId, Long userId) {
+        // 1. 대상 찾기
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다. id=" + noticeId));
 
-        notice.delete(); // isDeleted를 true로 변경
+        // 2. 권한 체크
+        if (!notice.getWriter().getUserId().equals(userId)) {
+            throw new RuntimeException("본인이 작성한 글만 삭제할 수 있습니다.");
+        }
+
+        // 3. 삭제 -> (엔티티의 delete 메서드) 주의 : 여기는 소프트 딜리트임
+        notice.delete();
     }
 
 }
