@@ -2,16 +2,16 @@ const openBtn = document.getElementById("openRegionModal");
 const closeBtn = document.getElementById("closeRegionModal");
 const modalOverlay = document.getElementById("regionModalOverlay");
 
-//  열기
 openBtn.addEventListener("click", () => {
     modalOverlay.classList.add("active");
 });
 
-//  닫기 (버튼)
+//  닫기
 closeBtn.addEventListener("click", closeModal);
 
 //  닫기 (배경 클릭)
 modalOverlay.addEventListener("click", (e) => {
+        closeBtn.textContent = "확인";
     if (e.target === modalOverlay) {
         closeModal();
     }
