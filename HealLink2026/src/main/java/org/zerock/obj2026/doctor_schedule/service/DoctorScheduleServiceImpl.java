@@ -1,0 +1,77 @@
+package org.zerock.obj2026.doctor_schedule.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.zerock.obj2026.doctor_schedule.domain.DoctorSchedule;
+import org.zerock.obj2026.doctor_schedule.dto.DoctorScheduleDTO;
+import org.zerock.obj2026.doctor_schedule.repository.DoctorScheduleRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@Log4j2
+@RequiredArgsConstructor
+@Transactional
+public class DoctorScheduleServiceImpl implements DoctorScheduleService {
+
+    private final DoctorScheduleRepository doctorScheduleRepository;
+    private final ModelMapper modelMapper;
+
+    @Override
+    public DoctorScheduleDTO register(DoctorScheduleDTO doctorScheduleDTO) {
+        DoctorSchedule doctorSchedule = modelMapper.map(doctorScheduleDTO, DoctorSchedule.class);
+        DoctorSchedule savedSchedule = doctorScheduleRepository.save(doctorSchedule);
+        return modelMapper.map(savedSchedule, DoctorScheduleDTO.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DoctorScheduleDTO> getScheduleByDoctor(Long doctorId) {
+        List<DoctorSchedule> scheduleList = doctorScheduleRepository.findByDoctorDoctorId(doctorId);
+        return scheduleList.stream()
+                .map(doctorSchedule -> modelMapper.map(doctorSchedule, DoctorScheduleDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DoctorScheduleDTO getSchedule(Long scheduleId) {
+        Optional<DoctorSchedule> result = doctorScheduleRepository.findById(scheduleId);
+        return result.map(doctorSchedule -> modelMapper.map(doctorSchedule, DoctorScheduleDTO.class))
+                .orElse(null);
+    }
+
+    @Override
+    public DoctorScheduleDTO modify(Long scheduleId, DoctorScheduleDTO doctorScheduleDTO) {
+        Optional<DoctorSchedule> result = doctorScheduleRepository.findById(scheduleId);
+        if (result.isPresent()) {
+            DoctorSchedule doctorSchedule = result.get();
+            if (doctorScheduleDTO.getWorkDate() != null) {
+                doctorSchedule.setWorkDate(doctorScheduleDTO.getWorkDate());
+            }
+            if (doctorScheduleDTO.getStartTime() != null) {
+                doctorSchedule.setStartTime(doctorScheduleDTO.getStartTime());
+            }
+            if (doctorScheduleDTO.getEndTime() != null) {
+                doctorSchedule.setEndTime(doctorScheduleDTO.getEndTime());
+            }
+            if (doctorScheduleDTO.getIsAvailable() != null) {
+                doctorSchedule.setIsAvailable(doctorScheduleDTO.getIsAvailable());
+            }
+// modify 메서드에서 updatedSchedule 변수 선언 후 초기화
+            DoctorSchedule updatedSchedule = doctorScheduleRepository.save(doctorSchedule);
+            return modelMapper.map(updatedSchedule, DoctorScheduleDTO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public void remove(Long scheduleId) {
+        doctorScheduleRepository.deleteById(scheduleId);
+    }
+}

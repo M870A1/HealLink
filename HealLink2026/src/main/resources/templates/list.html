@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital List</title>
+</head>
+<body>
+    <h1>Hospital List Page</h1>
+    <p>This is a placeholder for the hospital list.</p>
+
+    <!-- Hospital data will be displayed here -->
+    <div th:if="${responseDTO != null}">
+        <h2>Hospitals:</h2>
+        <ul>
+            <li th:each="hospital : ${responseDTO.dtoList}">
+                <a th:href="@{/hospitals/{hpid}(hpid=${hospital.hpid})}" th:text="${hospital.dutyName}">Hospital Name</a>
+                - <span th:text="${hospital.dutyAddr}">Hospital Address</span>
+            </li>
+        </ul>
+
+        <!-- Paging will go here -->
+        <div>
+            Page: <span th:text="${responseDTO.page}">1</span> / <span th:text="${responseDTO.totalPages}">1</span>
+        </div>
+    </div>
+    <div th:unless="${responseDTO != null}">
+        <p>No hospital data available.</p>
+    </div>
+
+    <!-- Paging UI -->
+    <div th:if="${responseDTO != null and responseDTO.totalPages > 0}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${!responseDTO.prev} ? 'disabled'">
+                    <a class="page-link" th:href="@{/hospitals/list(page=${responseDTO.start - 1}, size=${responseDTO.size}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="num : ${#numbers.sequence(responseDTO.start, responseDTO.end)}" th:classappend="${num == responseDTO.page} ? 'active'">
+                    <a class="page-link" th:href="@{/hospitals/list(page=${num}, size=${responseDTO.size}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}" th:text="${num}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${!responseDTO.next} ? 'disabled'">
+                    <a class="page-link" th:href="@{/hospitals/list(page=${responseDTO.end + 1}, size=${responseDTO.size}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

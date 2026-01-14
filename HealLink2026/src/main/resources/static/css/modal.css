@@ -1,0 +1,71 @@
+/* 테스트용 modal 입니다 */
+
+/* ===== 모달 배경 ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 처음에는 숨김 */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+}
+
+/* 모달 활성화 상태 */
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ===== 모달 창 ===== */
+.modal-container {
+    background: #ffffff;
+    width: 420px;
+    max-width: 90%;
+    padding: 24px 20px;
+    border-radius: 10px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    transform: translateY(-10px);
+    transition: transform 0.25s ease;
+}
+
+/* 활성화 시 자연스럽게 내려오기 */
+.modal-overlay.active .modal-container {
+    transform: translateY(0);
+}
+
+/* 제목 */
+.modal-container h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 버튼 영역 */
+#regionButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* 닫기 버튼 */
+#closeRegionModal {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
