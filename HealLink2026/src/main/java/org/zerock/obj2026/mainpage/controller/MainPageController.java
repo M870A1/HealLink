@@ -8,7 +8,7 @@ import org.zerock.obj2026.mainpage.service.MainpageService;
 
 @Controller
 @RequiredArgsConstructor
-public class MainPageController {
+public class MainpageController {
 
     private final MainpageService mainpageService;
 
