@@ -22,12 +22,23 @@ public class AppointmentController {
         log.info("Showing appointment form");
         return "appointment/form";
     }
+    @Controller
+    public class ReservationController {
+
+        @GetMapping("/ucalendar")
+        public String showCalendar() {
+            return "son/ucalendar";
+        }
+    }
 
     @PostMapping
     public String createAppointment(@RequestParam("scheduleId") Long scheduleId,
-                                    @RequestParam("patientId") Long patientId) {
+                                    @RequestParam("patientId") Long patientId,
+                                    @RequestParam("departmentId") Long departmentId,
+                                    @RequestParam(value = "symptom", required = false) String symptom,
+                                    @RequestParam(value = "note", required = false) String note) {
         log.info("POST /appointments - scheduleId: {}, patientId: {}", scheduleId, patientId);
-        appointmentService.createAppointment(scheduleId, patientId);
-        return "redirect:/"; // 예약 후 홈(병원 목록)으로 리다이렉트
+        appointmentService.createAppointment(scheduleId, patientId, departmentId, symptom, note);
+        return "redirect:/";
     }
 }

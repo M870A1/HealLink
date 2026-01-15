@@ -5,17 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var selectedEvent = null;
     var modal = document.getElementById('eventModal');
 
-// 모달 닫기
     document.getElementById('closeModal').addEventListener('click', function () {
         modal.style.display = 'none';
     });
-// 모달 밖 클릭시 닫기
     window.addEventListener('click', function (event) {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
     });
-// 모달 esc 닫기
     window.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';

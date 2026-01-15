@@ -1,41 +1,115 @@
+/* 기본 스타일  */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
+/* 전체 래퍼 */
 .reservation-wrap {
     display: flex;
-    gap: 30px;
-    padding: 50px;
-}
-
-.calendar-area {
-    width: 320px;
-}
-
-.time-area {
-    width: 240px;
-}
-
-#timeSlots button {
+    gap: 24px;
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    max-width: 900px;
     width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
+    box-sizing: border-box;
+}
+
+/* 캘린더  */
+.calendar-area {
+    padding-right: 32px;
+    border-right: 1px solid #eee;
+}
+
+.calendar-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+#datePicker {
+    width: auto;
+}
+
+/* 시간 선택  */
+.time-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+#timeGrid {
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.guide-text {
+    grid-column: span 2;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* 시간 버튼  */
+#timeGrid button {
+    padding: 12px 0;
+    font-size: 14px;
     border-radius: 6px;
     border: 1px solid #ccc;
     background: #fff;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-#timeSlots button:hover:not(:disabled) {
-    background: #e3f2fd;
+#timeGrid button:hover:not(:disabled) {
+    background: #e0f0ff;
+    transform: translateY(-1px);
 }
 
-#timeSlots button:disabled {
-    background: #ddd;
-    color: #888;
+#timeGrid button.selected {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+#timeGrid button:disabled {
+    background: #f0f0f0;
+    color: #aaa;
     cursor: not-allowed;
 }
 
-#timeSlots p {
-    color: #666;
+/* 예약 버튼 */
+.confirm-area {
+    border-left: 1px solid #eee;
+    padding-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#confirmBtn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+    background: linear-gradient(135deg, #007bff, #2196f3);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,123,255,0.35);
+    transition: all 0.2s ease;
+}
+
+#confirmBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,123,255,0.45);
 }
