@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.zerock.obj2026.admin.notice.dto.NoticePageRequestDTO;
-import org.zerock.obj2026.admin.notice.dto.NoticePageResponseDTO;
+
 import org.zerock.obj2026.healthinfo.domain.HealthInfo;
 import org.zerock.obj2026.healthinfo.domain.HealthInfoCategory;
 import org.zerock.obj2026.healthinfo.domain.HealthInfoSourceType;
@@ -23,29 +22,16 @@ import java.util.List;
 public class HealthInfoService {
     private final HealthInfoRepository healthInfoRepository;
 
-    // 1. 목록 .findAll...
-    public NoticePageResponseDTO<HealthInfoResponse> findAll(NoticePageRequestDTO requestDTO) {
+    // 1. 목록 .findAll... (2026-01-16 어제 다른 패키지를 쓰는 코드(NoticePageResponseDTO)로 꼬여있어서 수정)
+    public Page<HealthInfoResponse> findAll(Pageable pageable) {
 
-        Pageable pageable = requestDTO.getPageable();
-
-        // 1. 단순 전체 조회 (고정글 로직 삭제)
-        Page<HealthInfo> result = healthInfoRepository.findAllByOrderByHealthInfoIdDesc(pageable);
-
-        // 2. 엔티티를 HealthInfoResponse로 변환
-        List<HealthInfoResponse> dtoList = result.getContent().stream()
-                .map(HealthInfoResponse::new)
-                .toList();
-
-        // 3. pinnedList 없이 깨끗하게 반환
-        return NoticePageResponseDTO.<HealthInfoResponse>withAll()
-                .pageRequestDTO(requestDTO)
-                .dtoList(dtoList)
-                .total((int) result.getTotalElements())
-                .build();
+        return healthInfoRepository
+                .findAllByOrderByHealthInfoIdDesc(pageable)
+                .map(HealthInfoResponse::new);
     }
 
-      // 1-2. 목록 필터 .findAllWithFilters
-      // 1-2. 목록 필터 .findAllWithFilters
+
+      // 1-2. 목록 필터 .findAllWithFilters(이제 이게 쓰임)
       public Page<HealthInfoResponse> findAllWithFilters(
               Pageable pageable,
               List<String> categories,

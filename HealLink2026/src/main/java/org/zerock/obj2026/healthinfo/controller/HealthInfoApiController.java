@@ -9,8 +9,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.zerock.obj2026.admin.notice.dto.NoticePageRequestDTO;
-import org.zerock.obj2026.admin.notice.dto.NoticePageResponseDTO;
 import org.zerock.obj2026.healthinfo.dto.HealthInfoAddRequest;
 import org.zerock.obj2026.healthinfo.dto.HealthInfoResponse;
 import org.zerock.obj2026.healthinfo.service.HealthInfoService;
