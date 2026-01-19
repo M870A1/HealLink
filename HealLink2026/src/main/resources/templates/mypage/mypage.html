@@ -31,36 +31,50 @@
 
         <h2 class="content-title">내 예약</h2>
 
-        <p class="empty-message"
-           th:if="${#lists.isEmpty(reservations)}">
+        <p class="empty-message" th:if="${reservations == null or #lists.isEmpty(reservations.content)}">
             아직 예약된 진료가 없습니다.
         </p>
 
         <!-- 예약 목록 카드 -->
         <div class="reservation-list">
-            <div class="reservation-card"
-                 th:each="reservation : ${reservations}">
-                <div class="reservation-info">
-                    <span class="badge"
-                          th:text="${reservation.hospitalName.substring(0,1)}">A</span>
-                    <div>
-                        <strong th:text="${reservation.hospitalName}">병원명</strong><br>
-                        <span th:text="${reservation.doctorName}">의사명</span>
+            <div th:each="reservation : ${reservations.content}">
+                <a th:href="@{/mypage/reservation/{appointmentId}(appointmentId=${reservation.appointmentId})}"
+                   class="reservation-card">
+                    <div class="reservation-info">
+                        <span class="badge" th:text="${reservation.hospitalName.substring(0,1)}">A</span>
+                        <div>
+                            <strong th:text="${reservation.hospitalName}">병원명</strong><br>
+                            <span th:text="${reservation.doctorName}">의사명</span>
+                        </div>
                     </div>
-                </div>
-                <div class="reservation-action">
-                    📅 <span th:text="${reservation.createdAt}"></span>
-                </div>
+                    <div class="reservation-action">
+                        📅 <span th:text="${reservation.createdAt}"></span>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <!-- 페이지네이션 (디자인용) -->
-        <div class="pagination">
-            <span>Previous</span>
-            <span class="current">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>Next</span>
+        <div class="pagination" th:if="${reservations.totalPages > 1}">
+
+            <!-- 이전 -->
+            <a th:if="${!reservations.first}"
+               th:href="@{/mypage(page=${reservations.number - 1})}">
+                Previous
+            </a>
+
+            <!-- 페이지 번호 -->
+            <a th:each="pageNum : ${#numbers.sequence(0, reservations.totalPages - 1)}"
+               th:href="@{/mypage(page=${pageNum})}"
+               th:text="${pageNum + 1}"
+               th:classappend="${pageNum == reservations.number} ? 'current'">
+            </a>
+
+            <!-- 다음 -->
+            <a th:if="${!reservations.last}"
+               th:href="@{/mypage(page=${reservations.number + 1})}">
+                Next
+            </a>
+
         </div>
 
     </section>

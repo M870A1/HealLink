@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/mypage/sidebar.css}">
 
     <!-- 마이페이지 CSS -->
-    <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/reservation-detail.css}">
 </head>
 <body>
 
@@ -36,7 +36,7 @@
         <!-- 예약 상세 카드 -->
         <div class="reservation-detail-card">
 
-            <!-- 1️⃣ 상단 : 캘린더 -->
+            <!-- 상단 : 캘린더 -->
             <div class="reservation-calendar">
                 <!-- 실제 캘린더 JS 붙일 자리 -->
                 <div class="calendar-placeholder">
@@ -44,32 +44,39 @@
                 </div>
             </div>
 
-            <!-- 2️⃣ 예약 정보 -->
+            <!-- 예약 정보 -->
             <div class="reservation-info">
 
-                <p class="reservation-datetime">
-                    2025년 1월 10일 · 14:30
+                <!-- 예약 번호 -->
+                <p class="reservation-visit"
+                   th:text="'예약 번호: ' + ${reservation.appointmentId}">
+                    예약 번호: 1
                 </p>
 
-                <p class="reservation-visit">
-                    3번째 방문
+                <!-- 예약자 이메일 -->
+                <p class="reservation-email"
+                   th:text="'예약자 이메일: ' + ${reservation.email}">
+                    예약자 이메일
                 </p>
 
+                <!-- 병원 / 의사 -->
                 <div class="reservation-hospital">
-                    <strong>ㄱ성형외과</strong>
-                    <span>김철수 원장 · 성형외과</span>
+                    <strong th:text="${reservation.hospitalName}">병원명</strong>
+                    <span th:text="${reservation.doctorName}">의사명</span>
                 </div>
 
             </div>
 
-            <!-- 3️⃣ 하단 버튼 -->
+            <!-- 하단 버튼 -->
             <div class="reservation-actions">
-                <button class="btn btn-change">
+                <a th:href="@{/mypage/reservation/change/{id}(id=${reservation.appointmentId})}"
+                   class="btn btn-change">
                     예약 변경
-                </button>
-                <button class="btn btn-cancel">
+                </a>
+                <a th:href="@{/mypage/reservation/cancel/{id}(id=${reservation.appointmentId})}"
+                   class="btn btn-cancel">
                     예약 취소
-                </button>
+                </a>
             </div>
 
         </div>

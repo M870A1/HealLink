@@ -37,27 +37,52 @@
             <div class="form-group">
                 <label for="name">이름</label>
                 <input type="text" id="name" name="name"
-                       th:value="${user != null} ? ${user.name} : ''">
-                <p class="error-message">이름을 입력해주세요.</p>
+                       th:value="${user.name}" readonly>
             </div>
 
             <div class="form-group">
                 <label for="email">이메일</label>
                 <input type="email" id="email" name="email"
-                       th:value="${user != null} ? ${user.email} : ''" readonly>
-                <p class="error-message">올바른 이메일을 입력해주세요.</p>
+                       th:value="${user.email}" readonly>
+            </div>
+
+            <!-- 현재 비밀번호 -->
+            <div class="form-group">
+                <label for="currentPassword">현재 비밀번호</label>
+                <input type="password"
+                       id="currentPassword"
+                       name="currentPassword"
+                       placeholder="현재 비밀번호를 입력해주세요.">
+            </div>
+
+            <!-- 새 비밀번호 -->
+            <div class="form-group">
+                <label for="newPassword">새 비밀번호</label>
+                <input type="password"
+                       id="newPassword"
+                       name="newPassword"
+                       placeholder="변경할 비밀번호를 입력해주세요.">
+            </div>
+
+            <!-- 새 비밀번호 확인 -->
+            <div class="form-group">
+                <label for="confirmPassword">새 비밀번호 확인</label>
+                <input type="password"
+                       id="confirmPassword"
+                       name="confirmPassword"
+                       placeholder="한 번 더 입력해주세요.">
             </div>
 
             <div class="form-group">
                 <label for="phone">휴대폰 번호</label>
                 <input type="text" id="phone" name="tel"
-                       th:value="${user != null} ? ${user.tel} : ''">
+                       th:value="${user.tel}">
                 <p class="error-message">휴대폰 번호를 입력해주세요.</p>
             </div>
 
             <div class="btn-group">
                 <button type="submit" class="btn-primary">수정하기</button>
-                <button type="button" class="btn-danger" onclick="openWithdrawPopup()">회원탈퇴</button>
+                <button type="button" class="btn-danger"  id="withdrawBtn">회원탈퇴</button>
             </div>
 
         </form>
@@ -81,48 +106,11 @@
             탈퇴 후에는 계정 정보를 복구할 수 없습니다.
         </p>
         <div class="popup-btns">
-            <button class="btn-danger" onclick="confirmWithdraw()">예</button>
-            <button class="btn-primary" onclick="closePopup('withdrawPopup')">아니오</button>
+            <button class="btn-danger" id="withdrawConfirm">예</button>
+            <button class="btn-primary" id="withdrawCancel">아니오</button>
         </div>
     </div>
 </div>
-
-<script>
-    function submitProfile() {
-        const inputs = document.querySelectorAll('.form-group input');
-        let hasError = false;
-
-        inputs.forEach(input => {
-            const error = input.nextElementSibling;
-            if (!input.value.trim()) {
-                input.classList.add('error');
-                error.style.display = 'block';
-                if (!hasError) input.focus();
-                hasError = true;
-            } else {
-                input.classList.remove('error');
-                error.style.display = 'none';
-            }
-        });
-
-        if (!hasError) {
-            document.getElementById('successPopup').style.display = 'flex';
-        }
-    }
-
-    function openWithdrawPopup() {
-        document.getElementById('withdrawPopup').style.display = 'flex';
-    }
-
-    function confirmWithdraw() {
-        closePopup('withdrawPopup');
-        alert('탈퇴가 완료되었습니다.');
-    }
-
-    function closePopup(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-</script>
-
+<script th:src="@{/js/mypage/mypage.js}"></script>
 </body>
 </html>
