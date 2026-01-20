@@ -13,6 +13,8 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeSea
     @Query("SELECT n FROM Notice n WHERE n.isPinned = true AND n.isDeleted = false ORDER BY n.noticeId DESC")
     List<Notice> findPinnedNotices();
 
+    List<Notice> findTop3ByOrderByCreatedAtDesc(); // [3개 최신글 올리는것] : 을 메인 게시판에 쓰고 계셨군요? 2026-01-20
+
 }
 
 /* QueryDSL 쓰기 전에 쿼리메소드 코드가 이랬음
