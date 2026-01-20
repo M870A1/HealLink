@@ -19,6 +19,7 @@ public class NoticeResponse {
     private String content;
     private Long writerId;
     private String writerName;
+    private String writerEmail; // notice게시판 동일인물 확인용 2026-01-20
     private Integer viewCount;  // 조회수
     private Boolean isPinned;   // 상단 고정 여부
     private LocalDateTime createdAt;
@@ -33,6 +34,7 @@ public class NoticeResponse {
                 .content(notice.getContent())
                 .writerId(notice.getWriter().getUserId()) // User 엔티티에서 ID 추출
                 .writerName(notice.getWriter().getName()) // User 엔티티에서 이름 추출
+                .writerEmail(notice.getWriter().getEmail()) // notice게시판 동일인물 확인용 2026-01-20
                 .viewCount(notice.getViewCount())
                 .isPinned(notice.getIsPinned())
                 .createdAt(notice.getCreatedAt())

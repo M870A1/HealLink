@@ -1,54 +1,102 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 상세조회</title>
+    <title>HealLink - 공지사항 상세</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!--  공용 CSS : 글로벌, 헤더, 푸터, 본문  2026-01-20 -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/header.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/content.css}">
+
+    <style>
+        .view-container { max-width: 900px; margin: 50px auto; }
+        /* 제목 스타일 통일 */
+        .notice-title {
+            font-weight: 700 !important;
+            color: #153f8f !important;
+            font-size: 2rem !important;
+            margin-bottom: 20px;
+        }
+        .info-bar {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+        .content-box {
+            min-height: 300px;
+            padding: 30px 10px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .btn-admin-group { gap: 10px; display: flex; }
+    </style>
 </head>
 <body>
-<h2>공지사항 상세조회</h2>
-<hr>
-<div>
-    <p><strong>번호:</strong> <span th:text="${notice.noticeId}">1</span></p>
-    <p><strong>제목:</strong> <span th:text="${notice.title}">제목</span></p>
-    <p><strong>작성자:</strong> <span th:text="${notice.writerName}">작성자</span></p>
-    <p><strong>작성일:</strong> <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></p>
-    <p><strong>조회수:</strong> <span th:text="${notice.viewCount}">0</span></p>
+
+<div th:replace="~{mainpage/header :: header}"></div>
+
+<div class="container view-container">
+    <h3 class="notice-title" th:text="${notice.title}">공지사항 제목</h3>
+
+    <div class="info-bar">
+        <span>
+            <strong>작성자:</strong> <span th:text="${notice.writerName}">관리자</span>
+        </span>
+        <span>
+            <span class="mr-3"><strong>작성일:</strong> [[${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}]]</span>
+            <span><strong>조회수:</strong> [[${notice.viewCount}]]</span>
+        </span>
+    </div>
+
+    <div class="content-box">
+        <p th:text="${notice.content}" style="white-space: pre-wrap;">내용이 여기에 나옵니다.</p>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-between">
+        <a th:href="@{/admin/notice(page=${pageRequestDTO.page}, size=${pageRequestDTO.size}, types=${pageRequestDTO.types}, keyword=${pageRequestDTO.keyword})}"
+           class="btn btn-outline-secondary px-4">목록보기</a>
+
+        <div class="btn-admin-group"
+             sec:authorize="hasRole('ADMIN')"
+             th:if="${#authentication.name == notice.writerEmail}">
+
+            <button type="button" class="btn btn-primary px-4"
+                    th:onclick="|location.href='/admin/notice/modify/${notice.noticeId}'|">수정하기</button>
+
+            <button type="button" class="btn btn-danger px-4" onclick="deleteNotice()">삭제하기</button>
+        </div>
+    </div>
 </div>
-<hr>
-<div style="min-height: 200px; border: 1px solid #ccc; padding: 10px;">
-    <p th:text="${notice.content}" style="white-space: pre-wrap;">내용이 여기에 나옵니다.</p>
-</div>
-<hr>
 
-<a th:href="@{/admin/notice(page=${pageRequestDTO.page}, size=${pageRequestDTO.size}, types=${pageRequestDTO.types}, keyword=${pageRequestDTO.keyword})}">
-    <button type="button" style="padding: 5px 15px; cursor: pointer;">목록보기</button>
-</a>
+<div th:replace="~{mainpage/footer :: footer}"></div>
 
-<button type="button" th:onclick="|location.href='/admin/notice/modify/${notice.noticeId}'|">수정하기</button>
-
-<button type="button" style="background-color: #ff4d4f; color: white; border: none; padding: 5px 10px; cursor: pointer;"
-        onclick="deleteNotice()">삭제하기</button>
 
 <script th:inline="javascript">
     function deleteNotice() {
-        // Thymeleaf 변수를 자바스크립트에서 안전하게 가져옴
-        const noticeId = /*[[${notice.noticeId}]]*/ 0;
-
+        const noticeId = [[${notice.noticeId}]];
         if (confirm("정말로 이 공지사항을 삭제하시겠습니까?")) {
-            // API 호출 (Soft Delete를 수행하는 컨트롤러 주소)
             axios.delete('/api/admin/notice/' + noticeId)
-                .then(response => {
+                .then(res => {
                     alert("공지사항이 삭제되었습니다.");
-                    location.href = '/admin/notice'; // 목록 페이지로 리다이렉트
+                    location.href = '/admin/notice';
                 })
-                .catch(error => {
-                    console.error("삭제 실패:", error);
-                    alert("삭제 처리 중 오류가 발생했습니다.");
+                .catch(err => {
+                    alert("삭제 권한이 없거나 오류가 발생했습니다.");
                 });
         }
     }
 </script>
-
 </body>
 </html>

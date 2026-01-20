@@ -1,139 +1,162 @@
 <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org"
-          xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <meta charset="UTF-8">
-        <title>관리자 - 공지사항 목록</title>
-        <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-            th { background-color: #f4f4f4; }
-            .user-info { background: #e9ecef; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
-            .pinned-row { background-color: #fff9db; }
-            .active { font-weight: bold; color: blue; }
-            .pagination { display: flex; list-style: none; justify-content: center; padding: 0; margin-top: 20px; }
-            .pagination li { margin: 0 5px; }
-        </style>
-    </head>
-    <body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>HealLink - 관리자 공지사항</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
-    <div class="user-info">
-        <div sec:authorize="isAuthenticated()">
-            <strong>현재 접속자:</strong>
-            ID: <span th:text="${#authentication.principal.username}">email@test.com</span>
-            <button type="button" onclick="location.href='/logout'">로그아웃</button>
-        </div>
-        <div sec:authorize="isAnonymous()">
-            <strong>현재 상태:</strong> 비로그인 상태
-            <button type="button" onclick="location.href='/login'">로그인</button>
-        </div>
+    <!--  공용 CSS : 글로벌, 헤더, 푸터, 본문  2026-01-20 -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/header.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/content.css}">
+
+    <style>
+        /* 1. 제목 굵기 고정 (우리가 맞췄던 그 설정!) */
+        .notice-header h3 {
+            font-weight: 700 !important;
+            font-size: 2.2rem !important;
+            color: #153f8f !important;
+            margin-bottom: 30px;
+        }
+
+        /* 2. 테이블 스타일 세련되게 */
+        .table thead th {
+            background-color: #f8f9fa;
+            border-top: 2px solid #153f8f; /* 헤더 상단 포인트 컬러 */
+            color: #333;
+            font-weight: 600;
+        }
+        .table td { vertical-align: middle; }
+
+        /* 3. 고정 공지사항 강조 */
+        .pinned-row { background-color: #fff9f0; }
+        .badge-pinned { background-color: #d9480f; color: white; padding: 4px 8px; font-size: 11px; }
+
+        /* 4. 페이지네이션 커스텀 */
+        .pagination .page-link { color: #153f8f; }
+        .pagination .page-item.active .page-link {
+            background-color: #153f8f;
+            border-color: #153f8f;
+            color: white;
+        }
+
+        /* 5. 검색창 정렬 */
+        .search-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{mainpage/header :: header}"></div>
+
+<div class="container mt-5" style="min-height: 700px;">
+
+    <div class="notice-header">
+        <h3>공지사항 관리</h3>
     </div>
 
-    <h2>공지사항 목록</h2>
-
-    <div style="margin-bottom: 20px;">
-        <form action="/admin/notice" method="get" id="searchForm">
+    <div class="search-container">
+        <form action="/admin/notice" method="get" id="searchForm" class="form-inline justify-content-center">
             <input type="hidden" name="page" value="1">
 
-            <select name="types" style="padding: 5px;">
-                <option value="tc" th:selected="${responseDTO.pageRequestDTO.types == 'tc'}">제목+내용</option>
+            <select name="types" class="form-control mr-2">
+                <option value="tc" th:selected="${responseDTO.pageRequestDTO.types == 'tc'}">제목 + 내용</option>
                 <option value="t" th:selected="${responseDTO.pageRequestDTO.types == 't'}">제목</option>
                 <option value="c" th:selected="${responseDTO.pageRequestDTO.types == 'c'}">내용</option>
-
             </select>
 
-            <input type="text" name="keyword"
-                   th:value="${responseDTO.pageRequestDTO.keyword}"
-                   placeholder="검색어를 입력하세요"
-                   style="padding: 5px; width: 200px;">
+            <input type="text" name="keyword" class="form-control mr-2" style="width: 300px;"
+                   th:value="${responseDTO.pageRequestDTO.keyword}" placeholder="검색어를 입력하세요">
 
-            <button type="submit" style="padding: 5px 15px;">검색</button>
-            <button type="button" onclick="location.href='/admin/notice'" style="padding: 5px 10px;">초기화</button>
+            <button type="submit" class="btn btn-primary px-4">검색</button>
+            <button type="button" class="btn btn-outline-secondary ml-2" onclick="location.href='/admin/notice'">초기화</button>
         </form>
     </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>조회수</th>
-            <th>작성일</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="notice : ${responseDTO.pinnedList}" class="pinned-row">
-            <td><span style="font-weight: bold; color: #d9480f;">[공지]</span></td>
-            <td>
-                <span style="color: red; font-weight: bold;">[필독]</span>
-                <a th:href="@{/admin/notice/{id}(id=${notice.noticeId}, page=${responseDTO.pageRequestDTO.page}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}"
-                   th:text="${notice.title}" style="font-weight: bold;">고정된 제목</a>
-            </td>
-            <td th:text="${notice.writerName}">작성자</td>
-            <td th:text="${notice.viewCount}">0</td>
-            <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
-        </tr>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="text-center">
+            <tr>
+                <th style="width: 80px;">번호</th>
+                <th>제목</th>
+                <th style="width: 120px;">작성자</th>
+                <th style="width: 80px;">조회수</th>
+                <th style="width: 160px;">작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="notice : ${responseDTO.pinnedList}" class="pinned-row">
+                <td class="text-center"><span class="badge badge-pinned">공지</span></td>
+                <td>
+                    <a th:href="@{/admin/notice/{id}(id=${notice.noticeId}, page=${responseDTO.pageRequestDTO.page}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}"
+                       th:text="${notice.title}" class="font-weight-bold text-dark">고정된 제목</a>
+                </td>
+                <td class="text-center" th:text="${notice.writerName}">작성자</td>
+                <td class="text-center" th:text="${notice.viewCount}">0</td>
+                <td class="text-center" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">날짜</td>
+            </tr>
 
-        <tr th:each="notice : ${responseDTO.dtoList}">
-            <td th:text="${notice.noticeId}">1</td>
-            <td>
-                <a th:href="@{/admin/notice/{id}(id=${notice.noticeId}, page=${responseDTO.pageRequestDTO.page}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}"
-                   th:text="${notice.title}">일반 제목</a>
-            </td>
-            <td th:text="${notice.writerName}">작성자</td>
-            <td th:text="${notice.viewCount}">0</td>
-            <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
-        </tr>
+            <tr th:each="notice : ${responseDTO.dtoList}">
+                <td class="text-center" th:text="${notice.noticeId}">1</td>
+                <td>
+                    <a th:href="@{/admin/notice/{id}(id=${notice.noticeId}, page=${responseDTO.pageRequestDTO.page}, types=${responseDTO.pageRequestDTO.types}, keyword=${responseDTO.pageRequestDTO.keyword})}"
+                       th:text="${notice.title}" class="text-dark">일반 제목</a>
+                </td>
+                <td class="text-center" th:text="${notice.writerName}">작성자</td>
+                <td class="text-center" th:text="${notice.viewCount}">0</td>
+                <td class="text-center" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">날짜</td>
+            </tr>
 
-        <tr th:if="${#lists.isEmpty(responseDTO.dtoList) && #lists.isEmpty(responseDTO.pinnedList)}">
-            <td colspan="5">등록된 공지사항이 없습니다.</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br>
-
-    <div sec:authorize="hasRole('ADMIN')">
-        <button type="button" th:onclick="checkLoginAndRedirect()">공지사항 등록</button>
+            <tr th:if="${#lists.isEmpty(responseDTO.dtoList) && #lists.isEmpty(responseDTO.pinnedList)}">
+                <td colspan="5" class="text-center py-5 text-muted">등록된 공지사항이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="pagination">
-        <ul style="list-style: none; display: flex; padding: 0;">
-            <li th:if="${responseDTO.prev}">
-                <a th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(responseDTO.start - 1)}|">이전</a>
+    <div class="text-right mt-3" sec:authorize="hasRole('ADMIN')">
+        <button type="button" class="btn btn-primary shadow-sm" th:onclick="checkLoginAndRedirect()">+ 공지사항 등록</button>
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(responseDTO.start - 1)}|">이전</a>
             </li>
 
             <th:block th:each="num : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                <li>
-                    <a th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(num)}|"
-                       th:text="${num}"
-                       th:class="${responseDTO.page == num} ? 'active' : ''"
-                       th:style="${responseDTO.page == num} ? 'font-weight: bold; color: blue;' : ''">1</a>
+                <li th:class="|page-item ${responseDTO.page == num ? 'active' : ''}|">
+                    <a class="page-link" th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(num)}|" th:text="${num}">1</a>
                 </li>
             </th:block>
 
-            <li th:if="${responseDTO.next}">
-                <a th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(responseDTO.end + 1)}|">다음</a>
+            <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:href="|@{/admin/notice}${responseDTO.pageRequestDTO.getLink(responseDTO.end + 1)}|">다음</a>
             </li>
         </ul>
-    </div>
+    </nav>
+</div>
 
-    <script th:inline="javascript">
-        function checkLoginAndRedirect() {
-            const isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
-            if (!isAuthenticated) {
-                alert("로그인이 필요한 서비스입니다.");
-                location.href = '/login';
-            } else {
-                location.href = '/admin/notice/create';
-            }
+<div th:replace="~{mainpage/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    function checkLoginAndRedirect() {
+        const isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+        if (!isAuthenticated) {
+            alert("로그인이 필요한 서비스입니다.");
+            location.href = '/login';
+        } else {
+            location.href = '/admin/notice/create';
         }
-    </script>
+    }
+</script>
 
-    <script th:if="${error}">
-        alert([[${error}]]);
-    </script>
-
-    </body>
+</body>
 </html>

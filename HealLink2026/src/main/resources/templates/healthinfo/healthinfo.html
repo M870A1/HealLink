@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>건강 정보</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!--  공용 CSS : 글로벌, 헤더, 푸터, 본문  2026-01-20 -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/header.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/content.css}">
+
+<!--  스타일 -->
+    <style>
+        .card-title a, .summary-link { color: inherit; text-decoration: none; display: block; }
+        .card-title a:hover, .summary-link:hover { color: #007bff; text-decoration: underline; cursor: pointer; }
+        .summary-text { color: #666; font-size: 0.9rem; }
+
+        /* 제목 폰트 강제 설정(부트스트랩 기본 설정 굵기 대신 main.html처럼 굵게 */
+        .notice h3 {
+            font-weight: 700 !important;      /* 브라우저 기본 볼드와 동일한 700 */
+            font-size: 2.5rem !important;     /* 메인 페이지 content.css와 동일한 크기 */
+            color: #153f8f !important;       /* HealLink 메인 블루 컬러 */
+            margin-bottom: 40px !important;   /* 하단 여백 통일 */
+        }
+
+        /* 리스트 카드 내부 폰트 강제 설정 */
+        .notice-item, .notice-item * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+    </style>
+
+</head>
+
+<body>
+<!--  헤더  -->
+<div th:replace="~{mainpage/header :: header}"></div>
+
+<!--  본문  -->
+<div class="container mt-5">
+    <div class="notice">
+        <h3>건강 정보</h3>
+    </div>
+    <hr>
+    <!--  관리자만 보이는 글쓰기 버튼  -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a sec:authorize="hasRole('ADMIN')"
+           href="/healthinfo/create" class="btn btn-primary">+ 새 정보 등록</a>
+    </div>
+
+    <!--  검색  -->
+    <div class="input-group mt-3">
+        <input type="text" id="search-keyword" class="form-control" placeholder="제목 또는 내용으로 검색하세요">
+        <div class="input-group-append">
+            <button class="btn btn-dark" type="button" onclick="loadList(0)">검색</button>
+        </div>
+    </div>
+
+    <div class="container pt-3"> </div>
+
+    <!--  필터  -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 border-right">
+                    <h6 class="font-weight-bold text-primary">카테고리</h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input filter-category" type="checkbox" value="PUBLIC_CENTER" id="cat1">
+                        <label class="form-check-label" for="cat1">보건소 소식</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input filter-category" type="checkbox" value="VACCINATION_CHECKUP" id="cat2">
+                        <label class="form-check-label" for="cat2">예방접종/검진</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="font-weight-bold text-success">출처</h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input filter-source" type="checkbox" value="PUBLIC_CENTER" id="src1">
+                        <label class="form-check-label" for="src1">보건소</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input filter-source" type="checkbox" value="MEDICAL_SITE" id="src2">
+                        <label class="form-check-label" for="src2">의료 사이트</label>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right mt-3">
+                <button class="btn btn-primary btn-sm" onclick="loadList(0)">필터 적용</button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()">초기화</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  Axios 글 목록  -->
+    <div class="notice-list" id="list-container"></div>
+
+    <!--  페이징  -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center" id="pagination-container">
+        </ul>
+    </nav>
+</div>
+
+<!--  푸터  -->
+<div class="container pt-5"> </div>
+<div th:replace="~{mainpage/footer :: footer}"></div>
+
+<!--  JS : Axios 글 목록, 페이징  -->
+<script th:src="@{/js/healthinfo/healthinfo.js}"></script>
+
+</body>
+</html>

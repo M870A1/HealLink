@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>HealLink - 상세 정보</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <!--  공용 CSS : 글로벌, 헤더, 푸터, 본문  2026-01-20 -->
+    <link rel="stylesheet" th:href="@{/css/mainpage/header.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/mainpage/content.css}">
+
+    <style>
+        .view-container { max-width: 900px; margin: 40px auto; }
+        .content-box { min-height: 400px; line-height: 1.8; color: #444; font-size: 1.1rem; }
+        .meta-info { color: #888; font-size: 0.9rem; }
+        /* 수정/삭제 버튼 스타일 */
+        .btn-admin-edit { background-color: #153f8f; color: white; }
+        .btn-admin-delete { background-color: #dc3545; color: white; }
+    </style>
+
+</head>
+
+<body>
+<div th:replace="~{mainpage/header :: header}"></div>
+
+<div class="container view-container">
+    <div class="notice mb-4">
+        <h3 th:text="${healthInfo.title}" style="color: #153f8f; font-weight: bold;">제목</h3>
+        <div class="meta-info mt-2">
+            <span th:text="${#temporals.format(healthInfo.createdAt, 'yyyy-MM-dd HH:mm')}"></span> 작성
+            <span th:if="${healthInfo.updatedAt != healthInfo.createdAt}"
+                  th:text="'(수정됨: ' + ${#temporals.format(healthInfo.updatedAt, 'yyyy-MM-dd HH:mm')} + ')'"></span>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+            <div class="mb-4">
+                <span class="badge" style="background-color: #2f89fc; color: white; padding: 6px 12px;"
+                      th:text="${healthInfo.category == 'PUBLIC_CENTER' ? '보건소 소식' : '예방접종/검진'}"></span>
+                <span class="badge" style="background-color: #28a745; color: white; padding: 6px 12px;"
+                      th:text="${healthInfo.sourceType == 'PUBLIC_CENTER' ? '보건소' : '의료 사이트'}"></span>
+            </div>
+
+            <div class="content-box">
+                <p th:text="${healthInfo.content}" style="white-space: pre-wrap;"></p>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white border-top-0 p-4 d-flex justify-content-between">
+            <a href="/healthinfo" class="btn btn-outline-secondary px-4">목록으로 돌아가기</a>
+
+            <div sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/healthinfo/modify/{id}(id=${healthInfo.id})}" class="btn btn-admin-edit mr-2">수정하기</a>
+                <button type="button" class="btn btn-admin-delete" th:onclick="|deletePost(${healthInfo.id})|">삭제하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{mainpage/footer :: footer}"></div>
