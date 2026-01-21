@@ -63,13 +63,13 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
                         // notice, healthinfo 관리자만 쓰기 수정 2026-01-15
-                        .requestMatchers("/admin/notice/create/**",
-                                "/admin/notice/modify/**",
+                        .requestMatchers("/notice/create/**",
+                                "/notice/modify/**",
                                 "/healthinfo/create/**",
                                 "/healthinfo/modify/**")
                         .hasRole("ADMIN")
                         // notice, healthinfo 관리자만 삭제 2026-01-15
-                        .requestMatchers(HttpMethod.DELETE, "/api/admin/notice/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/notice/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/healthinfo/**").hasRole("ADMIN")
                         // 나중에 전체 확정나면 permitAll을 적절하게 수정
                         .anyRequest().permitAll())

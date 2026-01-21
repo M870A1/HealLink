@@ -15,10 +15,10 @@ function updateNotice() {
     }
 
     // Axios PUT 요청
-    axios.put('/api/admin/notice/' + id, requestData)
+    axios.put('/api/notice/' + id, requestData)
         .then(response => {
             alert("성공적으로 수정되었습니다.");
-            location.href = '/admin/notice/' + id;
+            location.href = '/notice/' + id;
         })
         .catch(error => {
             console.error("수정 실패:", error);

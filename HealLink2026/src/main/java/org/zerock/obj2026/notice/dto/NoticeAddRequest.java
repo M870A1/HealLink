@@ -1,11 +1,11 @@
-package org.zerock.obj2026.admin.notice.dto;
+package org.zerock.obj2026.notice.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.zerock.obj2026.admin.notice.domain.Notice;
+import org.zerock.obj2026.notice.domain.Notice;
 import org.zerock.obj2026.member.domain.User;
 
 @NoArgsConstructor

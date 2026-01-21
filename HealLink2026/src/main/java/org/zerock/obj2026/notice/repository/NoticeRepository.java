@@ -1,10 +1,8 @@
-package org.zerock.obj2026.admin.notice.repository;
+package org.zerock.obj2026.notice.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.zerock.obj2026.admin.notice.domain.Notice;
+import org.zerock.obj2026.notice.domain.Notice;
 
 import java.util.List;
 

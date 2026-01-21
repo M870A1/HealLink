@@ -1,20 +1,17 @@
-package org.zerock.obj2026.admin.notice.controller;
+package org.zerock.obj2026.notice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.zerock.obj2026.admin.notice.dto.NoticeAddRequest;
-import org.zerock.obj2026.admin.notice.service.NoticeService;
+import org.zerock.obj2026.notice.dto.NoticeAddRequest;
+import org.zerock.obj2026.notice.service.NoticeService;
 import org.zerock.obj2026.member.dto.UserSecurityDTO;
 
 @RestController
 @RequiredArgsConstructor
-// Axios에서 호출하는 공통 경로 : /api/admin/notice
-@RequestMapping("/api/admin/notice")
+// Axios에서 호출하는 공통 경로 : /api/notice
+@RequestMapping("/api/notice")
 public class NoticeApiController {
     private final NoticeService noticeService;
 

@@ -30,6 +30,8 @@ let isDetailView = false;
 let searchTimer;      // [추가] API 호출 지연을 위한 타이머
 let hospitalPos;      // [추가] 병원 위치를 전역으로 저장
 
+let detailOverlay = null; // 약국 클릭하면 네모상자에서 바꾸기 위한 용도 2026-01-21
+
 // ==========================================
 // 2. 지도 초기화 로직
 // ==========================================
@@ -56,18 +58,21 @@ function initPharmacyMap() {
         map = new kakao.maps.Map(container, options);
 
         kakao.maps.event.addListener(map, 'click', function() {
-            infowindow.close();
+            // 인포윈도우 대신 커스텀 오버레이 닫기
+            if (detailOverlay) {
+                detailOverlay.setMap(null);
+            }
         });
 
         ps = new kakao.maps.services.Places(map);
         infowindow = new kakao.maps.InfoWindow({zIndex: 1});
 
-        // --- 위치 결정 로직 ---
 
-        // 유효한 숫자인지 체크하는 헬퍼 함수
+        // --- 위치 결정 로직 ---
         const isValidCoord = (val) => val && !isNaN(val) && parseFloat(val) !== 0;
 
         if (isValidCoord(serverLat) && isValidCoord(serverLon)) {
+            // 1. 예약 병원 데이터가 있는 경우
             console.log("예약 병원 위치로 이동");
             hospitalPos = new kakao.maps.LatLng(parseFloat(serverLat), parseFloat(serverLon));
             map.setCenter(hospitalPos);
@@ -75,19 +80,28 @@ function initPharmacyMap() {
             searchPharmacies();
         }
         else if (navigator.geolocation) {
+            // 2. 예약은 없지만 GPS 사용이 가능한 경우
             navigator.geolocation.getCurrentPosition(
                 function (position) {
+                    console.log("GPS 위치 획득 성공");
                     hospitalPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     map.setCenter(hospitalPos);
                     searchPharmacies();
                 },
                 function(error) {
-                    console.log("GPS 거부/오류");
-                    searchPharmacies(); // 기본값(서면)으로 검색
+                    // 3. GPS 거부되거나 오류 발생 시 -> 기본값(서면) 사용
+                    console.log("GPS 거부/오류: 기본 위치(서면)로 검색합니다.");
+                    // hospitalPos는 이미 함수 상단에서 defaultPos(서면)로 초기화되어 있음
+                    map.setCenter(hospitalPos);
+                    searchPharmacies();
                 },
-                { timeout: 5000 } // 5초 안에 응답 없으면 실패 처리
+                { timeout: 5000 } // 사용자가 5초간 무응답이면 실패로 간주
             );
-        } else {
+        }
+        else {
+            // GPS 자체를 지원하지 않는 브라우저일 때
+            console.log("이 브라우저는 GPS를 지원하지 않습니다.");
+            map.setCenter(hospitalPos);
             searchPharmacies();
         }
 
@@ -103,11 +117,16 @@ function initPharmacyMap() {
 }
 
 function moveToCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const moveLatLon = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            map.panTo(moveLatLon);
-        });
+    if (map && hospitalPos) {
+        // 이미 initPharmacyMap에서 결정된 hospitalPos(병원 > GPS > 서면 순)로 이동
+        map.panTo(hospitalPos);
+
+        // 이동 후 약국 재검색 (필요 시)
+        setTimeout(function() {
+            searchPharmacies();
+        }, 500);
+    } else {
+        console.error("지도 또는 초기 위치 정보가 없습니다.");
     }
 }
 
@@ -175,7 +194,8 @@ function displayMarker(place, index) {
     });
     markers.push(marker);
 
-    const content = `
+    // 1. 상시 노출되는 숫자 마커 (기존 유지)
+    const numberContent = `
         <div style="background:#2980b9; color:white; border-radius:50%; width:20px; height:20px; 
                     line-height:20px; text-align:center; font-size:12px; font-weight:bold;
                     border:2px solid white; box-shadow:0px 2px 4px rgba(0,0,0,0.3);
@@ -183,17 +203,53 @@ function displayMarker(place, index) {
             ${index + 1}
         </div>`;
 
-    const customOverlay = new kakao.maps.CustomOverlay({
+    const numberOverlay = new kakao.maps.CustomOverlay({
         position: markerPosition,
-        content: content,
+        content: numberContent,
         yAnchor: 1
     });
-    customOverlay.setMap(map);
-    markers.push(customOverlay);
+    numberOverlay.setMap(map);
+    markers.push(numberOverlay);
 
+    // 2. 마커 클릭 이벤트
     kakao.maps.event.addListener(marker, 'click', function () {
-        infowindow.setContent(`<div style="padding:5px;font-size:12px;">${place.place_name}</div>`);
-        infowindow.open(map, marker);
+        // 기존에 열려있는 상세창이 있다면 닫기
+        if (detailOverlay) detailOverlay.setMap(null);
+
+        // [수정] 투박한 상자 없는 커스텀 디자인
+        const detailContent = `
+            <div style="position: relative; bottom: 70px; cursor: default;">
+                <div style="
+                    padding: 8px 12px;
+                    background: #2c3e50;
+                    color: white;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                    white-space: nowrap;
+                ">
+                    ${place.place_name}
+                    <div style="
+                        position: absolute;
+                        bottom: -6px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 0; height: 0;
+                        border-left: 6px solid transparent;
+                        border-right: 6px solid transparent;
+                        border-top: 6px solid #2c3e50;
+                    "></div>
+                </div>
+            </div>`;
+
+        detailOverlay = new kakao.maps.CustomOverlay({
+            position: markerPosition,
+            content: detailContent,
+            yAnchor: 1
+        });
+
+        detailOverlay.setMap(map);
         map.panTo(markerPosition);
         updateSidePanel(place);
     });

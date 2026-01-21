@@ -1,4 +1,4 @@
-package org.zerock.obj2026.admin.notice.domain;
+package org.zerock.obj2026.notice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.zerock.obj2026.admin.notice.dto.NoticeAddRequest;
+import org.zerock.obj2026.notice.dto.NoticeAddRequest;
 import org.zerock.obj2026.member.domain.User;
 
 import java.time.LocalDateTime;

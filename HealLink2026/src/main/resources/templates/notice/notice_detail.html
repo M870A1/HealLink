@@ -46,6 +46,11 @@
 <div th:replace="~{mainpage/header :: header}"></div>
 
 <div class="container view-container">
+
+<!-- JS용   -->
+    <input type="hidden" id="noticeId" th:value="${notice.noticeId}">
+
+
     <h3 class="notice-title" th:text="${notice.title}">공지사항 제목</h3>
 
     <div class="info-bar">
@@ -65,7 +70,7 @@
     <hr>
 
     <div class="d-flex justify-content-between">
-        <a th:href="@{/admin/notice(page=${pageRequestDTO.page}, size=${pageRequestDTO.size}, types=${pageRequestDTO.types}, keyword=${pageRequestDTO.keyword})}"
+        <a th:href="@{/notice(page=${pageRequestDTO.page}, size=${pageRequestDTO.size}, types=${pageRequestDTO.types}, keyword=${pageRequestDTO.keyword})}"
            class="btn btn-outline-secondary px-4">목록보기</a>
 
         <div class="btn-admin-group"
@@ -73,7 +78,7 @@
              th:if="${#authentication.name == notice.writerEmail}">
 
             <button type="button" class="btn btn-primary px-4"
-                    th:onclick="|location.href='/admin/notice/modify/${notice.noticeId}'|">수정하기</button>
+                    th:onclick="|location.href='/notice/modify/${notice.noticeId}'|">수정하기</button>
 
             <button type="button" class="btn btn-danger px-4" onclick="deleteNotice()">삭제하기</button>
         </div>

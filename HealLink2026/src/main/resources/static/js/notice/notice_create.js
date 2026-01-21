@@ -17,10 +17,10 @@ function saveNotice() {
     };
 
     // Axios POST 요청
-    axios.post('/api/admin/notice', requestData)
+    axios.post('/api/notice', requestData)
         .then(response => {
             alert("공지사항이 성공적으로 등록되었습니다.");
-            location.href = "/admin/notice";
+            location.href = "/notice";
         })
         .catch(error => {
             console.error("저장 실패:", error);

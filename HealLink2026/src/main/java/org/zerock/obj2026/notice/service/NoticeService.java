@@ -1,17 +1,16 @@
-package org.zerock.obj2026.admin.notice.service;
+package org.zerock.obj2026.notice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.zerock.obj2026.admin.notice.domain.Notice;
-import org.zerock.obj2026.admin.notice.dto.NoticeAddRequest;
-import org.zerock.obj2026.admin.notice.dto.NoticePageRequestDTO;
-import org.zerock.obj2026.admin.notice.dto.NoticePageResponseDTO;
-import org.zerock.obj2026.admin.notice.dto.NoticeResponse;
-import org.zerock.obj2026.admin.notice.repository.NoticeRepository;
+import org.zerock.obj2026.notice.domain.Notice;
+import org.zerock.obj2026.notice.dto.NoticeAddRequest;
+import org.zerock.obj2026.notice.dto.NoticePageRequestDTO;
+import org.zerock.obj2026.notice.dto.NoticePageResponseDTO;
+import org.zerock.obj2026.notice.dto.NoticeResponse;
+import org.zerock.obj2026.notice.repository.NoticeRepository;
 import org.zerock.obj2026.member.domain.User;
 
 import org.zerock.obj2026.member.repository.UserRepository;

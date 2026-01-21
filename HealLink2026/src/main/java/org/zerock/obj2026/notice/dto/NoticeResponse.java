@@ -1,10 +1,10 @@
-package org.zerock.obj2026.admin.notice.dto;
+package org.zerock.obj2026.notice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.zerock.obj2026.admin.notice.domain.Notice;
+import org.zerock.obj2026.notice.domain.Notice;
 
 import java.time.LocalDateTime;
 

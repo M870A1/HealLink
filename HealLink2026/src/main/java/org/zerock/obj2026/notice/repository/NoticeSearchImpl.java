@@ -1,6 +1,6 @@
 // QueryDSL용
 
-package org.zerock.obj2026.admin.notice.repository;
+package org.zerock.obj2026.notice.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.zerock.obj2026.admin.notice.domain.Notice;
-import org.zerock.obj2026.admin.notice.domain.QNotice; // domain 패키지 확인!
-import org.zerock.obj2026.admin.notice.dto.NoticePageRequestDTO;
+import org.zerock.obj2026.notice.domain.Notice;
+import org.zerock.obj2026.notice.domain.QNotice; // domain 패키지 확인!
+import org.zerock.obj2026.notice.dto.NoticePageRequestDTO;
 
 import java.util.List;
 

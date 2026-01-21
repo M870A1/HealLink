@@ -1,4 +1,4 @@
-package org.zerock.obj2026.admin.notice.dto;
+package org.zerock.obj2026.notice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
