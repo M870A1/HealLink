@@ -31,7 +31,7 @@ public class Notice {
     private String title;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT") // 2026-01-21 [중요]초기설정이 TINYTEXT로 잡혀서 수정 (어쩐지 긴 글이 안 써지더라)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

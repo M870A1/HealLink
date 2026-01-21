@@ -27,10 +27,11 @@ public class HealthInfo {
     private String title;
 
     @Lob
+    @Column(columnDefinition = "TEXT") // 2026-01-21 초기설정이 LONGTEXT로 잡혀서 수정(기획서대로)
     private String summary;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT") // 2026-01-21 [중요]초기설정이 TINYTEXT로 잡혀서 수정 (어쩐지 긴 글이 안 써지더라)
     private String content;
 
     @Enumerated(EnumType.STRING)

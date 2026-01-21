@@ -13,7 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/mainpage/content.css}">
 
     <style>
-        /* 1. 제목 굵기 고정 (우리가 맞췄던 그 설정!) */
+        /* 1. 제목 굵기 고정 */
         .notice-header h3 {
             font-weight: 700 !important;
             font-size: 2.2rem !important;
@@ -146,17 +146,7 @@
 
 <div th:replace="~{mainpage/footer :: footer}"></div>
 
-<script th:inline="javascript">
-    function checkLoginAndRedirect() {
-        const isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
-        if (!isAuthenticated) {
-            alert("로그인이 필요한 서비스입니다.");
-            location.href = '/login';
-        } else {
-            location.href = '/admin/notice/create';
-        }
-    }
-</script>
+<!-- 2026-01-21 원래 사용자 확인 JS가 있었는데 sec:authorize="hasRole('ADMIN')" 쓰니까 필요없어서 지웠음 -->
 
 </body>
 </html>
