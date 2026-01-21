@@ -22,9 +22,9 @@ public class HPageRequestDTO {
     private String types; // 검색 조건
     private String keyword; // 검색어
     private String link; // 페이지,사이즈,검색조건등을 url맞게 반환하는 변수
-    private String sido;
-    private String gu;
-    private String dong;
+    private String sido; // 시/도
+    private String gu; // 시/군/구
+    private String dong; // 읍/면/동
     public Pageable getPageable() {
         return PageRequest.of(page-1, size, Sort.by("hpid").descending());
     }
@@ -48,6 +48,16 @@ public class HPageRequestDTO {
                 e.printStackTrace();
             }
         }
+        if (sido != null && !sido.isEmpty()) {
+            builder.append("&sido=" +sido);
+        }
+        if (gu != null && !gu.isEmpty()) {
+            builder.append("&gu=" +gu);
+        }
+        if (dong != null && !dong.isEmpty()) {
+            builder.append("&dong=" +dong);
+        }
+
         return builder.toString();
     }
 }
