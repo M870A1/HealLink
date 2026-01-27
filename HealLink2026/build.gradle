@@ -59,6 +59,10 @@ dependencies {
 
     // @NotBlank랑 @Valid 쓰려고 추가했습니다 : 2026-01-12
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+//    AWS S3
+
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'
 }
 
 tasks.named('test') {
